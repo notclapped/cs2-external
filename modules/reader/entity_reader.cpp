@@ -18,16 +18,10 @@ uintptr_t m_iTeamNum = 0x3EB;
 uintptr_t dwLocalPlayerPawn = 0x205A700;
 uintptr_t m_pGameSceneNode = 0x330;
 uintptr_t m_modelState = 0x150;
-uintptr_t m_iIDEntIndex = 0x344C;
-uintptr_t m_pAimPunchServices = 0x1490;
-uintptr_t m_unpredictableBaseAngle = 0xA4;
 std::vector<Player> g_players;
 
 float viewMatrix[16] = {};
 int localTeam = 0;
-QAngle punchAngle;
-static float lastPunchX = 0.f;
-static float lastPunchY = 0.f;
 
 uintptr_t GetModuleBase(DWORD pid, const char* moduleName) {
     uintptr_t moduleBase = 0;
@@ -64,33 +58,10 @@ void reader::handler() {
         
         uintptr_t listEntry = proxy::read<uintptr_t>(entityList + 0x10);
         if (!listEntry) continue;
-        //std::cout << listEntry << std::endl;
         uintptr_t localPawn = proxy::read<uintptr_t>(client + dwLocalPlayerPawn);
-        //std::cout << localPawn << std::endl;
         if (!localPawn) continue;
         
         localTeam = proxy::read<int>(localPawn + m_iTeamNum);
-        uint32_t aimHandle = proxy::read<uint32_t>(localPawn + m_iIDEntIndex);
-        isAiming = 0;
-
-        uintptr_t aimPunchServices = proxy::read<uintptr_t>(localPawn + 0x1490);
-
-        float newPunchX = proxy::read<float>(aimPunchServices + 0x60);
-        float newPunchY = proxy::read<float>(aimPunchServices + 0x64);
-
-        float deltaX = newPunchX - lastPunchX;
-        float deltaY = newPunchY - lastPunchY;
-
-        float expected = punchDeltaX.load();
-        while (!punchDeltaX.compare_exchange_weak(expected, expected + deltaX));
-
-        expected = punchDeltaY.load();
-        while (!punchDeltaY.compare_exchange_weak(expected, expected + deltaY));
-
-        lastPunchX = newPunchX;
-        lastPunchY = newPunchY;
-
-        
 
         for (int i = 0; i < 16; i++)
             viewMatrix[i] = proxy::read<float>(client + dwViewMatrix + i * sizeof(float));
@@ -113,7 +84,6 @@ void reader::handler() {
 
             int health = proxy::read<int>(currentPawn + iHealth);
             if (health <= 0 || health > 100) continue;
-            //std::cout << health << std::endl;
 
             Player p = {};
             p.health = health;
@@ -132,15 +102,10 @@ void reader::handler() {
                 }
             }
 
-            if ((pawnHandle & 0x7FFF) == aimHandle) {
-                isAiming = 1;
-            }
-
             players.push_back(p);
         }
 
         g_players = std::move(players);
-        //Sleep(1);
     }
     timeEndPeriod(1);
 }
