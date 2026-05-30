@@ -68,12 +68,12 @@ static void apply_theme( )
 }
 
 // ── Tabs ───────────────────────────────────────────────────────────────────
-enum class tab { visuals, combat, config, settings };
+enum class tab { visuals, config, settings };
 static tab current_tab{ tab::visuals };
 
-static constexpr int         k_n        = 4;
-static constexpr const char* k_labels[] = { "visuals", "combat", "config", "settings" };
-static constexpr tab         k_vals[]   = { tab::visuals, tab::combat, tab::config, tab::settings };
+static constexpr int         k_n        = 3;
+static constexpr const char* k_labels[] = { "visuals", "config", "settings" };
+static constexpr tab         k_vals[]   = { tab::visuals, tab::config, tab::settings };
 
 static constexpr float k_header_h = 28.f;
 static constexpr float k_tabbar_h = 24.f;
@@ -394,7 +394,6 @@ void draw( )
         switch ( current_tab )
         {
             case tab::visuals:  draw_visuals( col1, col2, gap ); break;
-            case tab::combat:   draw_combat ( col1, col2, gap ); break;
             case tab::config:   draw_config ( col1, col2 );      break;
             case tab::settings: draw_settings( col1, col2, gap ); break;
         }
