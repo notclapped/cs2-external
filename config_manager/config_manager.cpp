@@ -108,15 +108,18 @@ int config::load(const std::string& filename){
     file >> j;
     file.close();
 
-    esp::enabled         = j.value("esp", false);
-    esp::enableNameESP   = j.value("espName", false);
-    esp::enableHealthESP = j.value("espHealth", false);
-    esp::enableBoxes     = j.value("espBoxes", false);
-    esp::teams           = j.value("espTeams", false);
+    esp::enabled          = j.value("esp", false);
+    esp::enableNameESP    = j.value("espName", false);
+    esp::enableHealthESP  = j.value("espHealth", false);
+    esp::enableBoxes      = j.value("espBoxes", false);
+    esp::enableSkeleton   = j.value("espSkeleton", false);
+    esp::borders          = j.value("espBorders", false);
+    esp::teams            = j.value("espTeams", false);
 
-    esp::color       = json_to_rgba(j.value("espColor",       json::array({255,255,255,255})), {255,255,255,255});
-    esp::nameColor   = json_to_rgba(j.value("espNameColor",   json::array({255,255,255,255})), {255,255,255,255});
-    esp::healthColor = json_to_rgba(j.value("espHealthColor", json::array({0,255,0,255})),     {0,255,0,255});
+    esp::color        = json_to_rgba(j.value("espColor",        json::array({255,255,255,255})), {255,255,255,255});
+    esp::nameColor    = json_to_rgba(j.value("espNameColor",    json::array({255,255,255,255})), {255,255,255,255});
+    esp::healthColor  = json_to_rgba(j.value("espHealthColor",  json::array({0,255,0,255})),     {0,255,0,255});
+    esp::skeletonColor= json_to_rgba(j.value("espSkeletonColor",json::array({170,175,220,255})), {170,175,220,255});
 
     tracers::enabled     = j.value("tracers", false);
     tracers::style       = j.value("tracersStyle", 0);
@@ -126,26 +129,9 @@ int config::load(const std::string& filename){
 
     tracers::color = json_to_rgba(j.value("tracersColor", json::array({255,255,255,255})), {255,255,255,255});
 
-    bones::enabled = j.value("bones", false);
-    bones::head    = j.value("bonesHead", false);
-    bones::filled  = j.value("bonesHeadFilled", false);
-    bones::teams   = j.value("bonesTeams", false);
-
-    bones::color       = json_to_rgba(j.value("bonesColor",       json::array({255,255,255,255})), {255,255,255,255});
-    bones::headColor   = json_to_rgba(j.value("bonesHeadColor",   json::array({255,182,213,255})), {255,182,213,255});
-    bones::filledColor = json_to_rgba(j.value("bonesFilledColor", json::array({255,182,213,150})), {255,182,213,150});
-
-    aimassist::enabled        = j.value("aim", false);
-    aimassist::renderRadio    = j.value("aimRenderRadio", false);
-    aimassist::renderDeadZone = j.value("aimRenderDeadZone", false);
-    aimassist::radio          = j.value("aimRadio", 50.0f);
-    aimassist::deadZone       = j.value("aimDeadZone", 10.0f);
-    aimassist::smoothing      = j.value("aimSmoothing", 1.0f);
-    aimassist::deadZoneEnabled= j.value("aimDeadZoneEnabled", false);
-
-    triggerbot::enabled       = j.value("trigger", false);
-    triggerbot::delay         = j.value("triggerDelay", 0.0f);
-    triggerbot::randomization = j.value("triggerRandom", false);
+    grenades::enabled   = j.value("grenades", false);
+    grenades::localOnly = j.value("grenadesLocal", true);
+    grenades::color     = json_to_rgba(j.value("grenadesColor", json::array({170,175,220,200})), {170,175,220,200});
 
     return 0;
 }
