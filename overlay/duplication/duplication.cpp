@@ -106,8 +106,7 @@ int duplication::handler(HWND hwnd) {
 
         if (esp::enabled) esp::handler(rect);
         if (tracers::enabled) tracers::handler(rect);
-        if (bones::enabled) bones::handler(rect);
-        if (aimassist::enabled) aimassist::render(rect);
+        if (grenades::enabled) grenades::handler(rect);
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

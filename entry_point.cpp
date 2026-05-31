@@ -56,9 +56,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //std::thread(gui::manage).detach();
     std::thread(reader::handler).detach();
     std::thread(zEntry::zMain).detach();
-    std::thread(triggerbot::handler).detach();
-    std::thread(aimassist::handler).detach();
-    std::thread(rcs::handler).detach();
 
     while (true) {
         if(!FindWindowA(nullptr, "Counter-Strike 2") || destroyed) break;

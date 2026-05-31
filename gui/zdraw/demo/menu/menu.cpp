@@ -7,13 +7,10 @@ namespace menu {
 // ── State ─────────────────────────────────────────────────────────────────
 static const char* tracer_styles[]   = { "arrows", "lines" };
 static const char* tracer_centered[] = { "down", "centered" };
-static const char* bone_selection[]  = { "head", "neck", "chest", "pelvis" };
 
 static std::vector<std::string> config_list;
 static int         selected_config{ 0 };
 static std::string config_name{ "config name" };
-
-static int aimbot_bone{ 0 };
 
 // ── Theme ──────────────────────────────────────────────────────────────────
 static void apply_theme( )
@@ -179,6 +176,18 @@ static void draw_visuals( float col1, float col2, float gap )
         zui::new_line( );
         zui::separator( );
 
+        zui::checkbox( "skeleton", esp::enableSkeleton );
+        zui::same_line( );
+        zui::color_picker( "##skeleton", esp::skeletonColor, 80.f );
+
+        zui::new_line( );
+        zui::separator( );
+
+        zui::checkbox( "borders", esp::borders );
+
+        zui::new_line( );
+        zui::separator( );
+
         zui::checkbox( "teams", esp::teams );
 
         zui::end_group_box( );
@@ -211,111 +220,17 @@ static void draw_visuals( float col1, float col2, float gap )
 
     zui::new_line( );
 
-    // ── Bones ──
-    if ( zui::begin_group_box( "bones esp", col1 ) )
+    // ── Grenades ──
+    if ( zui::begin_group_box( "grenades", col1 ) )
     {
-        zui::checkbox( "enable", bones::enabled );
+        zui::checkbox( "enable", grenades::enabled );
         zui::same_line( );
-        zui::color_picker( "##bones", bones::color, 80.f );
+        zui::color_picker( "##grenades", grenades::color, 80.f );
 
         zui::new_line( );
         zui::separator( );
 
-        zui::checkbox( "teams", bones::teams );
-        zui::separator( );
-
-        zui::checkbox( "head", bones::head );
-        zui::same_line( );
-        zui::color_picker( "##headcolor", bones::headColor, 80.f );
-
-        if ( bones::head )
-        {
-            zui::new_line( );
-            zui::checkbox( "filled", bones::filled );
-            zui::same_line( );
-            zui::color_picker( "##headfilled", bones::filledColor, 80.f );
-        }
-
-        zui::separator( );
-        zui::end_group_box( );
-    }
-}
-
-// ── Tab: combat ────────────────────────────────────────────────────────────
-static void draw_combat( float col1, float col2, float gap )
-{
-    // ── Aimbot ──
-    if ( zui::begin_group_box( "aimbot", col1 ) )
-    {
-        zui::checkbox( "enable", aimassist::enabled );
-        zui::separator( );
-
-        zui::slider_float( "smoothing", aimassist::smoothing, 0.f, 20.f );
-        zui::separator( );
-
-        zui::slider_float( "fov", aimassist::radio, 10.f, 150.f );
-        zui::checkbox( "render fov", aimassist::renderRadio );
-        zui::separator( );
-
-        zui::checkbox("dead zone enabled", aimassist::deadZoneEnabled);
-        zui::slider_float( "dead zone", aimassist::deadZone, 10.f, 100.f );
-        zui::checkbox( "render dead zone", aimassist::renderDeadZone );
-        zui::separator( );
-
-        zui::combo( "bone", aimbot_bone, bone_selection, 4, col1 );
-
-        zui::end_group_box( );
-    }
-
-    zui::same_line( gap );
-
-    // ── Triggerbot ──
-    if ( zui::begin_group_box( "triggerbot", col2 ) )
-    {
-        zui::checkbox( "enable", triggerbot::enabled );
-        zui::separator( );
-
-        zui::slider_float( "delay (ms)", triggerbot::delay, 0.f, 200.f );
-        zui::separator( );
-
-        zui::checkbox( "randomization", triggerbot::randomization );
-
-        zui::end_group_box( );
-    }
-
-    zui::new_line( );
-
-    /*
-    if ( zui::begin_group_box( "rcs", col1 ) )
-    {
-        zui::checkbox( "enable", rcs::enabled );
-        zui::separator( );
-        zui::slider_float( "smoothing", rcs::smoothing, 0.f, 200.f );
-        zui::end_group_box( );
-    }        */ 
-}
-
-static void draw_settings( float col1, float col2, float gap )
-{
-    if ( zui::begin_group_box( "information", col1 ) )
-    {
-        zui::text( "build: " __DATE__ " " __TIME__ );
-        zui::text( "dev: github.com/000nico" );
-        zui::separator( );
-
-        zui::end_group_box( );
-    }
-
-    zui::same_line( gap );
-
-    if ( zui::begin_group_box( "unload cheat", col2 ) )
-    {
-;
-        if ( zui::button( "destruct", col2 - 24.f, 35.f ) )
-        {
-            exit();
-            destroyed=true;
-        }
+        zui::checkbox( "local only", grenades::localOnly );
 
         zui::end_group_box( );
     }
@@ -363,6 +278,31 @@ static void draw_config( float col1, float col2 )
         zui::end_group_box( );
     }
     
+}
+
+static void draw_settings( float col1, float col2, float gap )
+{
+    if ( zui::begin_group_box( "information", col1 ) )
+    {
+        zui::text( "build: " __DATE__ " " __TIME__ );
+        zui::text( "dev: github.com/000nico" );
+        zui::separator( );
+
+        zui::end_group_box( );
+    }
+
+    zui::same_line( gap );
+
+    if ( zui::begin_group_box( "unload cheat", col2 ) )
+    {
+        if ( zui::button( "destruct", col2 - 24.f, 35.f ) )
+        {
+            exit();
+            destroyed=true;
+        }
+
+        zui::end_group_box( );
+    }
 }
 
 // ── Public ─────────────────────────────────────────────────────────────────
